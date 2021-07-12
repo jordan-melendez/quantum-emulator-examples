@@ -332,7 +332,7 @@
 \author[shortname]{\textcolor{t10orange}{Jordan Melendez}\inst{1,}\,\inst{2}
 }
 \institute[shortinst]{
-  \inst{1} Root Insurance \and
+  \inst{1} Root Insurance, Data Scientist \and
   \inst{2} The Ohio State University
   }
 \begin{document}
@@ -356,6 +356,8 @@
 
 \begin{center}
 There is \alert{code} to accompany these slides!
+
+\alert{\href{https://github.com/jordan-melendez/quantum-emulator-examples}{github.com/jordan-melendez/quantum-emulator-examples}}
 \end{center}
 
 \end{frame}
@@ -393,8 +395,8 @@ Complexity:
 \end{column}
 \begin{column}{0.5\textwidth}
 \begin{itemize}
-\item Emulator: An algorithm capable of accurately approximating the exact solution while requiring only a fraction of the computational resources
-\item $r$-process, $0\nu\beta\beta$ simulations, \& optimizing FRIB experiments can each be compute intensive --- but important!
+    \item $r$-process, $0\nu\beta\beta$ simulations, \& optimizing FRIB experiments can each be compute intensive --- but important!
+    \item Emulator: An algorithm capable of accurately approximating the exact solution while requiring only a fraction of the computational resources
 \end{itemize}
 \end{column}
 
@@ -497,15 +499,39 @@ y_pred, y_stdv = gp.predict(
 \end{frame}
 
 
+\begin{frame}[t]{Example: GPs for the Schr\"odinger equation}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\vspace{-0.5cm}%
+\begin{align*}
+    V(\lecs) = V_{h.o.}(\omega) + \sum \lec_i \exp[-(r/b_i)^2]
+\end{align*}
+for fixed $\{b_i\} = \{0.5, 2, 4\}$.
+\vspace{-0.1cm}
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/wave_functions_efficient_basis.png}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+Fit separate GP to $E$ and radius $R=\E[r]$.
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/perturbed_oscillator_ground_state_energy_residuals_gp_only.png}
+\includegraphics[width=0.9\textwidth]{figures/perturbed_oscillator_ground_state_radius_residuals_gp_only.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
 \begin{frame}{Ritz subspace method: the basics}
-Instead of solving this
-\begin{align}
+Instead of solving the Schr\"odinger eq.\ (an eigenvalue problem for bound states)
+\begin{align*}
     H(\lecs) \ket*{\psi(\lecs)} & = E(\lecs) \ket*{\psi(\lecs)}
-\end{align}
+\end{align*}
 write down a \alert{trial wave function} as a linear combination
-\begin{align}
+\begin{align*}
     \ket*{\subspace{\psi}} = \sum_i \beta_i \ket*{\psi_i}
-\end{align}
+\end{align*}
 and use a \alert{variational method} to determine the best $\beta_i$:
 
 \begin{myblock}[valign=center]{Bound state variational method}
@@ -642,7 +668,7 @@ def expectation_value(self, a):
 \end{frame}
 
 
-\begin{frame}{A comparison: GPs vs Ritz subspace emulators}
+\begin{frame}{A comparison: GPs vs Ritz (NCSM) subspace emulators}
 \begin{columns}[t]
 \begin{column}{0.5\textwidth}
 Use 6 lowest oscillator states as basis.
@@ -662,7 +688,10 @@ Fit a separate GP to $E$ and the radius $R$.
 \end{frame}
 
 
-\section{Efficient Subspace Emulators}
+\section{Efficient Subspace Emulators\\
+aka Eigenvector Continuation\\
+aka Reduced Basis Method
+}
 
 
 \begin{frame}[t]{Efficient subspace emulators for bound states: the basics}
@@ -748,7 +777,7 @@ def fit(self, a_train):
 \end{frame}
 
 
-\begin{frame}{Bound state emulators in real life (\alert{K\"onig \emph{et al.} \href{https://arxiv.org/abs/1909.08446}{arXiv:1909.08446}})}
+\begin{frame}{Bound state emulators in the wild (\alert{K\"onig \emph{et al.} \href{https://arxiv.org/abs/1909.08446}{arXiv:1909.08446}})}
 \begin{columns}
 \begin{column}{0.5\textwidth}
 \begin{figure}
@@ -761,17 +790,19 @@ def fit(self, a_train):
 \end{figure}
 \end{column}
 \end{columns}
-Eigenvector continuation (the efficient subspace emulator) beats both polynomials and GPs on interpolation and extrapolation in parameter space
+Eigenvector continuation (the efficient subspace emulator) beats both polynomials and GPs on interpolation and extrapolation in parameter space.
+
+Observable: $^{4}$He g.s.\ energy. Uses 12 training points with 3 parameters.
 \end{frame}
 
 
-\begin{frame}{Bound state emulators in real life: inverse problem (\alert{\href{https://arxiv.org/abs/2104.04441}{arXiv:2104.04441}})}
+\begin{frame}{Bound state emulators in the wild: inverse problem (\alert{\href{https://arxiv.org/abs/2104.04441}{arXiv:2104.04441}})}
 \begin{columns}[t]
 \begin{column}{0.5\textwidth}
 \begin{figure}
 \only<1>{\includegraphics[width=0.8\textwidth]{figures/nn_training_pts_with_stdv_titles.png}}
 \end{figure}
-\only<1>{Sampling 15 different parameters (some not shown)}
+\only<1>{Sampling 15 different parameters (some not shown). 50 training points.}
 \only<2>{Able to rapidly perform sampling on laptop in minutes, rather than on supercomputer for hours}
 \end{column}
 \begin{column}{0.5\textwidth}
@@ -791,9 +822,9 @@ Eigenvector continuation (the efficient subspace emulator) beats both polynomial
 Again, write down a \alert{trial wave function}: $\ket*{\subspace{\psi}} = \sum \beta_i \ket*{\psi_i}$.
 
 For scattering, it is convenient to work with the radial wave function $u_\ell(r)$ for partial wave $\ell$, which in asymptotic form is
-\begin{align}
+\begin{align*}
     u_\ell(r) \xrightarrow[r\to\infty]{} \sin(pr - \frac{1}{2}\ell\pi) + K_\ell \cos(pr - \frac{1}{2}\ell\pi)
-\end{align}
+\end{align*}
 
 \begin{myblock}[valign=center]{Kohn variational principle (KVP)}
 Minimize $\mathcal{K}_{KVP}[\subspace{\psi}_\ell] = K_\ell - \mel*{\subspace{\psi}_\ell}{H(\lecs) - E}{\subspace{\psi}_\ell}$ such that $\braket*{\subspace{\psi}_\ell}{\subspace{\psi}_\ell} = 1$.
@@ -814,15 +845,15 @@ It is a linear problem, can solve for $\beta$ analytically and quickly.
 \begin{column}{0.5\textwidth}
 
 \begin{figure}
-\only<2>{\includegraphics[width=0.8\textwidth]{figures/furnstahl_p_alpha_residuals.png}}
-\only<3>{\includegraphics[width=0.8\textwidth]{figures/furnstahl_optical_residuals.png}}
+\only<2>{\includegraphics[width=\textwidth]{figures/furnstahl_p_alpha_residuals.png}}
+\only<3>{\includegraphics[width=\textwidth]{figures/furnstahl_optical_residuals.png}}
 \end{figure}
 \end{column}
 \end{columns}
 \only<1>{Can emulate entire scattering wave function and its phase shifts}
 \only<1>{%
 \begin{figure}%
-\includegraphics[width=0.8\textwidth]{figures/emulated_scattering_wave_functions.png}%
+\includegraphics[width=0.9\textwidth]{figures/emulated_scattering_wave_functions.png}%
 \end{figure}%
 }
 \end{frame}
@@ -834,10 +865,10 @@ Rather than solve the Schr{\"o}dinger equation, use the Lippmann--Schwinger (LS)
 \begin{align*}
     K = V + V G_0 K
 \end{align*}
-Propose trial $K$ matrix
-\begin{align}
+Propose \alert{trial $K$ matrix}
+\begin{align*}
     \subspace{K} = \sum \beta_i K_i
-\end{align}
+\end{align*}
 
 \begin{myblock}[valign=center]{Newton variational principle (NVP)}
 Minimize $\mathcal{K}_{NVP}[\subspace{K}] = V + V G_0 \subspace{K} + \subspace{K} G_0 V - \subspace{K} G_0 \subspace{K} + \subspace{K} G_0 V G_0 \subspace{K}$ ~~(no constraints!)
@@ -846,14 +877,6 @@ Minimize $\mathcal{K}_{NVP}[\subspace{K}] = V + V G_0 \subspace{K} + \subspace{K
 As usual, take the \alert{matrix basis} $\{K_i\}$ from exact solutions of the LS equation.
 
 It is a linear problem, can solve for $\beta$ analytically and quickly.
-
-% \begin{align*}
-%     m_i(\lecs) & = \bra{\phi'} \left[K_i G_0 V(\lecs) + V(\lecs) G_0 K_i\right] \ket{\phi}, \\
-%     M_{ij}(\lecs) & = \bra{\phi'} [
-%                        K_i G_0 K_j - K_i G_0 V(\lecs) G_0 K_j \notag \\
-%     & \hspace{0.29in} + K_j G_0 K_i - K_j G_0 V(\lecs) G_0 K_i
-%     ] \ket{\phi}.
-% \end{align*}
 
 \end{frame}
 
