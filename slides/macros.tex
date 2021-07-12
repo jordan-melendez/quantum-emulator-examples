@@ -1,0 +1,189 @@
+% !TEX root = CH_to_EKM_revisited_v4.tex
+
+% Define \newsubcommand:
+% look whether the following character is _ and, if so, it will merge the subscripts.
+\makeatletter
+\newcommand\newsubcommand[3]{\newcommand#1{#2\sc@sub{#3}}}
+\def\sc@sub#1{\def\sc@thesub{#1}\@ifnextchar_{\sc@mergesubs}{_{\sc@thesub}}}
+\def\sc@mergesubs_#1{_{\sc@thesub#1}}
+\makeatother
+
+
+\DeclareDocumentCommand{\includevcenteredgraphics}{ O{} m }{%
+    \vcenter{\hbox{\includegraphics[#1]{#2}}}
+}
+
+\newcommand{\subspace}[1]{ \ensuremath{\widetilde{#1}} }
+\newcommand{\normmat}{\mathcal{N}}
+
+\newcommand{\lec}{a}
+\newcommand{\lecvec}{\vec{\lec}}
+\newcommand{\lecs}{\vec{\lec}}
+\newcommand{\Emax}{E_\textup{max}}
+\newcommand{\kmax}{k_\textup{max}}
+
+%\newcommand{\NNLO}{N$^2$LO}
+%\newcommand{\NNNLO}{N$^3$LO}
+\newcommand{\LO}{\ensuremath{{\rm LO}}}
+\newcommand{\NLO}{\ensuremath{{\rm NLO}}}
+\newcommand{\NNLO}{\ensuremath{{\rm N}{}^2{\rm LO}}}
+\newcommand{\NNNLO}{\ensuremath{{\rm N}{}^3{\rm LO}}}
+\newcommand{\NNNNLO}{\ensuremath{{\rm N}{}^4{\rm LO}}}
+\newcommand{\NkLO}[1]{\ensuremath{\mathrm{N}^{#1}\mathrm{LO}}}
+
+
+\newcommand{\qgeo}[1]{q_k^{(#1)}}
+\newcommand{\neff}{\ensuremath{N_{\text{eff}}}}
+\newcommand{\data}{\mathcal{D}}
+% \newcommand{\hyperparam}{\boldsymbol{\theta}}
+\newcommand{\param}{\boldsymbol{\theta}}
+\newcommand{\len}{\ell}
+\newcommand{\lenvec}{\boldsymbol{\ell}}
+\newcommand{\lenset}{\ensuremath{L}}
+\newcommand{\lenvecset}{\ensuremath{\mathbf{L}}}
+\DeclareMathOperator{\GP}{\mathcal{GP}}
+\DeclareMathOperator{\TP}{\mathcal{TP}}
+
+% Neutron-proton
+\newcommand{\npr}{\ensuremath{np}}
+
+\newcommand{\chiEFT}{\ensuremath{\chi}\text{EFT}}
+
+\newcommand{\boldvec}[1]{\bm{#1}}
+%\newcommand{\boldvec}[1]{\mathbf{#1}}
+
+
+\newcommand{\abar}{\bar a}
+
+\newsubcommand{\ckvec}{\mathbf{c}}{k}
+% \newcommand{\ckvecsq}{\mathbf{c}_k^{2}}
+\newsubcommand{\bkvec}{\mathbf{b}}{k}
+% \newcommand{\bkvecsq}{\mathbf{b}_k^{2}}
+% \newcommand{\kinparvec}{\boldvec{\alpha}}
+\newcommand{\kinparvec}{x}
+\newcommand{\kinparvecset}{\vb{X}}
+\newcommand{\kinparvecmag}{x}
+\newsubcommand{\ckvecset}{\mathbf{C}}{k}
+\newcommand{\cbarset}{\bar{C}}
+\newcommand{\cset}{C}
+\newcommand{\capprox}{\ensuremath{c'}}
+\newcommand{\capproxset}{\ensuremath{C'}}
+\newsubcommand{\ckvecapprox}{\mathbf{c}'}{k}
+\newsubcommand{\ckvecapproxset}{\mathbf{C}'}{k}
+\newcommand{\bset}{B}
+\newcommand{\bapprox}{\ensuremath{b'}}
+\newcommand{\bapproxset}{\ensuremath{B'}}
+\newsubcommand{\bkvecapprox}{\mathbf{b}'}{k}
+\newsubcommand{\bkvecset}{\mathbf{B}}{k}
+\newsubcommand{\bkvecapproxset}{\mathbf{B}'}{k}
+\newcommand{\genobs}{y}
+\newsubcommand{\genobsth}{y}{\textup{th}}
+\newsubcommand{\genobsexp}{y}{\textup{exp}}
+\newsubcommand{\genobsvec}{\boldsymbol{y}}{\!k}
+
+\newsubcommand{\akvec}{\mathbf{a}}{k}
+\newcommand{\aset}{A}
+\newcommand{\aapprox}{\ensuremath{a'}}
+\newcommand{\aapproxset}{\ensuremath{A'}}
+\newsubcommand{\akvecapprox}{\mathbf{a}'}{k}
+\newsubcommand{\akvecset}{\mathbf{A}}{k}
+\newsubcommand{\akvecapproxset}{\mathbf{A}'}{k}
+
+
+\newcommand{\Covfunc}{\ensuremath{k}}
+\newcommand{\Covmat}{\vb{K}}
+\newcommand{\Corrmat}{\vb{R}}
+\newcommand{\Covmattest}{\boldsymbol{\Sigma}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+% The \pr command
+%%%%%%%%%%%%%%%%%%%
+
+\let\Pr\undefined{}  % Remove the definition from the Physics package
+
+% \newcommand{\pr}{\text{pr}} % Old
+\DeclareMathOperator{\pr}{pr} % Good, but want to handle sizing and | spacing?
+% \DeclareDocumentCommand\pr{}{\opbraces{\prob}} % Using opbraces from physics package to resize delimeters
+\newcommand{\given}{\,|\,}  % Use for | in \pr
+\DeclareMathOperator{\prior}{\pi}
+
+
+\newcommand{\cbar}{\bar{c}}
+
+
+\newcommand{\Q}{\ensuremath{Q}}
+\newcommand{\Qapprox}{\ensuremath{Q'}}
+\newcommand{\Qmax}{\Q_{\rm max}}
+\newcommand{\smallscale}{\ensuremath{\mathcal{Q}}}
+\newcommand{\smallscaleapprox}{\ensuremath{\mathcal{Q}'}}
+
+\newcommand{\Elab}{E_{\rm lab}}
+
+
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\IG}{\textup{IG}}
+
+
+\newcommand{\transpose}[1]{#1^{\intercal}}
+% \newcommand{\trans}{\intercal}
+
+
+
+\newcommand{\genobsref}{\ensuremath{y_{\textup{ref}}}}
+\newcommand{\Xref}{\genobsref}
+
+
+% Differential taken from Physics package
+% Uses smart spacing for a nice look. Requires xparse.
+% https://www.ctan.org/pkg/physics?lang=en
+
+% First, the basics:
+\def\diffd{\mathrm{d}}  % Upright differentials
+% \def\diffd{d}  % Italic differentials
+
+% Now add spacing:
+% Derivatives
+\DeclareDocumentCommand\differential{ o g d() }{ % Differential 'd'
+    % o: optional n for nth differential
+    % g: optional argument for readability and to control spacing
+    % d: long-form as in d(cos x)
+    \IfNoValueTF{#2}{
+        \IfNoValueTF{#3}
+            {\diffd\IfNoValueTF{#1}{}{^{#1}}}
+            {\mathinner{\diffd\IfNoValueTF{#1}{}{^{#1}}\argopen(#3\argclose)}}
+        }
+        {\mathinner{\diffd\IfNoValueTF{#1}{}{^{#1}}#2} \IfNoValueTF{#3}{}{(#3)}}
+    }
+\DeclareDocumentCommand\dd{}{\differential} % Shorthand for \differential
+
+
+% Path Derivative:
+\newcommand{\pathd}{\mathcal{D}}  % differential symbol for path integrals
+
+% Now add relevant spacing and options
+% Inspired by differential definition from `Physics' package at
+% https://www.ctan.org/tex-archive/macros/latex/contrib/physics?lang=en
+\DeclareDocumentCommand\pathdifferential{ o g d() }{ % Path 'D'
+    % o: optional n for nth differential
+    % g: optional argument for readability and to control spacing
+    % d: long-form as in d(cos x)
+    \IfNoValueTF{#2}{
+        \IfNoValueTF{#3}
+            {\pathd\IfNoValueTF{#1}{}{^{#1}}}
+            {\mathinner{\pathd\IfNoValueTF{#1}{}{^{#1}}\argopen(#3\argclose)}}
+        }
+        {\mathinner{\pathd\IfNoValueTF{#1}{}{^{#1}}#2} \IfNoValueTF{#3}{}{(#3)}}
+    }
+
+\DeclareDocumentCommand\DD{}{\pathdifferential} % Shorthand for \pathdifferential
+
+% Observable notation
+
+\makeatletter
+\def\dsigma{\@ifstar\@@dsigmawithstar\@dsigma}
+\def\@dsigma{\frac{\dd\sigma}{\dd\Omega}}  % \dsigma for upright frac
+\def\@@dsigmawithstar{\dd\sigma/\dd\Omega} % \dsigma* for inline frac
+\makeatother
