@@ -53,6 +53,9 @@ class BoundStateHamiltonian:
     def emulate_wave_function(self, p):
         return self.X @ self.coefficients(p)
 
+    def emulate_energy(self, p):
+        return self.solve_schrodinger_subspace(p)[0]
+
     def fit(self, p_train):
         """
 
@@ -100,6 +103,19 @@ class BoundStateHamiltonian:
         else:
             E, psi = self.solve_schrodinger_exact(p)
             return E
+
+    def variance_expensive(self, p):
+        """The variance of the wave function emulator
+
+        From https://arxiv.org/pdf/2107.13449.pdf
+        This function does not try to speed up the calculation by using the small space,
+        and hence is needlessly expensive if used in large systems.
+        """
+        psi = self.emulate_wave_function(p)
+        E = self.emulate_energy(p)
+        H = self.compute_full_hamiltonian(p)
+        H_minus_E = H - E * np.eye(H.shape[0])
+        return (psi.T @ H_minus_E @ H_minus_E @ psi) / (psi.T @ H @ H @ psi)
 
 
 class BoundStateOperator:
