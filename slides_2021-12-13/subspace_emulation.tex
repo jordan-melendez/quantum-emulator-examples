@@ -852,7 +852,7 @@ For scattering, it is convenient to work with the radial wave function $u_\ell(r
 \end{align*}
 
 \begin{myblock}[valign=center]{Kohn variational principle (KVP)}
-Minimize $\mathcal{K}_{KVP}[\subspace{\psi}_\ell] = K_\ell - \mel*{\subspace{\psi}_\ell}{H(\lecs) - E}{\subspace{\psi}_\ell}$ such that $\braket*{\subspace{\psi}_\ell}{\subspace{\psi}_\ell} = 1$.
+Minimize $\mathcal{K}_{KVP}[\subspace{\psi}_\ell] = K_\ell - \mel*{\subspace{\psi}_\ell}{H(\lecs) - E}{\subspace{\psi}_\ell}$ such that $\braket*{\subspace{\psi}_\ell}{\subspace{\psi}_\ell} = \delta(\cdots)$.
 \end{myblock}%
 
 Again, use exact $u_\ell(r)$ at training points $\{\lecs_i\}$ as the basis.
@@ -1005,12 +1005,12 @@ Non-linear means there is no ``nice'' solution for $\beta$. Use an optimizer.
 
 \begin{frame}{Emulators for generic differential equations}
 \begin{columns}[t]
-\begin{column}{0.5\textwidth}
+\begin{column}{0.55\textwidth}
 \begin{enumerate}
 \item Derive the \alert{\href{https://en.wikipedia.org/wiki/Galerkin_method}{Galerkin weak formulation}} of the PDE
 \item Apply the \alert{\href{https://doi.org/10.1137/151004550}{reduced basis method}}
 \end{enumerate}
-Example [Gaussian $\rho(\lecs)$ for variable $\lecs$]:
+Example [Gaussian $\rho(\lecs)$ for parameters $\lecs$]:
 \begin{itemize}
 \item Poisson equation
 \begin{align*}
