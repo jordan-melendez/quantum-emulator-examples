@@ -1,0 +1,1122 @@
+%!TEX program = lualatex
+
+\documentclass[xcolor=dvipsnames, aspectratio=169]{beamer}
+\usetheme[
+    outer/progressbar=foot,
+    ]{metropolis}           % Use metropolis theme
+% \usecolortheme[snowy]{owl}
+
+
+% \usepackage{footbib}
+
+\usepackage{graphicx,amsmath,amssymb,bm}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{tikz, pgfplots, filecontents, tikzscale}
+\usetikzlibrary{arrows, arrows.meta, tikzmark}
+\usetikzlibrary{shapes.geometric, shapes}
+\usetikzlibrary{calc}
+\tikzstyle{every picture}+=[remember picture]
+\usepackage{pgfpages}
+\usepackage{multimedia}
+\usepackage{media9}
+\usepackage{tabu}
+\usepackage{multirow}
+\usepackage{standalone}
+\usepackage{physics}
+\usepackage[most]{tcolorbox}
+\usepackage{appendixnumberbeamer}
+\tcbuselibrary{listings}
+\tcbuselibrary{raster}
+\tcbuselibrary{skins}
+
+\usepackage{chngpage}  % Center columns with adjustwidth
+\usepackage{mathtools}
+
+\usepackage{booktabs}
+\usepackage{emoji}
+% \usepackage{minted}
+
+\usepackage{dsfont}
+
+
+% One style for all TikZ pictures for working with overlays:
+\tikzset{every picture/.style=remember picture}
+% Define a TikZ node for math content:
+\newcommand{\mathnode}[2]{%
+   \mathord{\tikz[baseline=(#1.base), inner sep = 0pt]{\node (#1) {$#2$};}}}
+
+\usepackage{natbib}
+
+\newcommand\myfootcite[1]{\footnote{\cite{#1}}}
+
+% Math column
+\newcolumntype{M}[1]{>{$}#1<{$}@{\hskip 0.05in}}
+
+\tcbset{
+    metropolisstyle/.style={
+        enhanced,
+        colback=normal text.bg!90!normal text.fg,
+        colframe=normal text.fg,
+        fonttitle=\bfseries,
+        coltitle=normal text.bg,
+        colbacktitle=normal text.fg!95!normal text.bg,
+        attach boxed title to top center={yshift=-0.25mm-\tcboxedtitleheight/2,yshifttext=2mm-\tcboxedtitleheight/2},
+        boxed title style={
+            boxrule=0.5mm,
+            frame code={ \path[tcb fill frame] ([xshift=-4mm]frame.west)
+            -- (frame.north west) -- (frame.north east) -- ([xshift=4mm]frame.east)
+            -- (frame.south east) -- (frame.south west) -- cycle; },
+            interior code={ \path[tcb fill interior] ([xshift=-2mm]interior.west)
+            -- (interior.north west) -- (interior.north east)
+            -- ([xshift=2mm]interior.east) -- (interior.south east) -- (interior.south west)
+            -- cycle;}
+        }
+    }
+}
+
+
+
+\tcbset{
+    nostyle/.style={
+        enhanced,
+        colback=normal text.bg,
+        colframe=normal text.bg,
+        fonttitle=\bfseries,
+        coltitle=normal text.bg,
+        colbacktitle=normal text.fg!95!normal text.bg,
+        attach boxed title to top center={yshift=-0.25mm-\tcboxedtitleheight/2,yshifttext=2mm-\tcboxedtitleheight/2},
+        boxed title style={
+            boxrule=0.5mm,
+            frame code={ \path[tcb fill frame] ([xshift=-4mm]frame.west)
+            -- (frame.north west) -- (frame.north east) -- ([xshift=4mm]frame.east)
+            -- (frame.south east) -- (frame.south west) -- cycle; },
+            interior code={ \path[tcb fill interior] ([xshift=-2mm]interior.west)
+            -- (interior.north west) -- (interior.north east)
+            -- ([xshift=2mm]interior.east) -- (interior.south east) -- (interior.south west)
+            -- cycle;}
+        }
+    }
+}
+
+\tcbset{
+    subbox/.style={
+        sidebyside, notitle, nobeforeafter, frame hidden,
+        size=minimal, bottom=2mm, top=2mm, valign=center,
+        sidebyside gap=4mm
+    }
+}
+
+\setbeamercolor{background canvas}{bg=white}
+
+% \tcbsubskin{mycross}{empty}{
+%           metropolisstyle,
+%           frame code={%
+%           \draw[red,line width=5pt] (frame.south west)--(frame.north east);
+%           \draw[red,line width=5pt] (frame.north west)--(frame.south east);
+%           },
+%           skin first=mycross,skin middle=mycross,skin last=mycross }
+
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+
+% \newtcolorbox{myblock}[2][]{
+%     enhanced,
+%     colback=normal text.bg!90!normal text.fg,
+%     colframe=normal text.fg,
+%     coltitle=normal text.bg,
+%     % colbacktitle=blue!5!yellow!10!white,
+%     colbacktitle=normal text.fg!95!normal text.bg,
+%     attach boxed title to top center={yshift=-0.25mm-\tcboxedtitleheight/2,yshifttext=2mm-\tcboxedtitleheight/2},
+%     title=\textbf{#2},
+%     boxed title style={
+%         boxrule=0.5mm,
+%         frame code={ \path[tcb fill frame] ([xshift=-4mm]frame.west)
+%         -- (frame.north west) -- (frame.north east) -- ([xshift=4mm]frame.east)
+%         -- (frame.south east) -- (frame.south west) -- cycle; },
+%         interior code={ \path[tcb fill interior] ([xshift=-2mm]interior.west)
+%         -- (interior.north west) -- (interior.north east)
+%         -- ([xshift=2mm]interior.east) -- (interior.south east) -- (interior.south west)
+%         -- cycle;}
+%   },
+%   #1
+% }
+
+\newtcolorbox{myblock}[2][]{
+    metropolisstyle,
+    title=#2,
+    #1
+}
+
+
+
+
+% Renew quote
+\usepackage{xparse}
+
+\let\oldquote\quote
+\let\endoldquote\endquote
+
+\RenewDocumentEnvironment{quote}{o}
+  {\oldquote}
+  {\par\nobreak\smallskip
+   \hfill\IfValueT{#1}{---~#1}\endoldquote 
+   \addvspace{\bigskipamount}}
+
+
+% ======================================================================
+% Begin Theme Styling
+% ======================================================================
+
+% Official OSU scarlet color
+\definecolor{OSUscarlet}{RGB}{187, 0, 0}
+
+% Tableau 10 palette
+% \definecolor{t10blue}{HTML}{1f77b4}
+% \definecolor{t10orange}{HTML}{ff7f0e}
+\definecolor{t10green}{HTML}{2ca02c}
+\definecolor{t10red}{HTML}{d62728}
+\definecolor{t10purple}{HTML}{9467bd}
+\definecolor{t10blue}{RGB}{31,119,180}
+\definecolor{t10orange}{RGB}{255,127,14}
+  
+% Theme colors are derived from these two elements
+% \setbeamercolor{normal text}{%
+%     fg=mDarkTeal,
+%     bg=black!2
+%   }
+
+% Change color bar
+% \setbeamercolor{alerted text}{fg=OSUscarlet}
+
+% ... however you can of course override styles of all elements
+% \setbeamercolor{frametitle}{bg=OSUscarlet}
+
+
+% Leave normal text alone, but change primary palette
+% \setbeamercolor{palette primary}{%
+%   use=normal text,
+%   fg=normal text.bg,
+%   % bg=normal text.fg,
+%   bg=OSUscarlet  % Controls color of standout frames
+% }
+
+% ======================================================================
+% End Theme Styling
+% ======================================================================
+
+% ======================================================================
+% Begin Code Styling
+% ======================================================================
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\colorlet{numbercolor}{red!20!violet}
+
+
+\newtoggle{InString}{}% Keep track of if we are within a string
+\togglefalse{InString}% Assume not initally in string
+
+% \newcommand*{\FormatDigit}[1]{\textcolor{numbercolor}{#1}}
+\newcommand*{\FormatDigit}[1]{\iftoggle{InString}{#1}{\color{numbercolor}#1}}%
+\newcommand*{\ProcessQuote}[1]{\color{mygreen}#1\iftoggle{InString}{\global\togglefalse{InString}}{\global\toggletrue{InString}}}%
+
+\lstset{ %
+  % backgroundcolor=\color{white},    % choose the background color
+  basicstyle=\footnotesize\ttfamily,  % size of fonts used for the code + typewriter (mono)
+  breaklines=true,                    % automatic line breaking only at whitespace
+  captionpos=b,                       % sets the caption-position to bottom
+  commentstyle=\color{mygray},        % comment style
+  escapeinside={-*}{*-},              % if you want to add LaTeX within your code
+  keywordstyle=\color{blue},          % keyword style
+  stringstyle=\color{mygreen},        % string literal style
+  % literate=%
+  %  *{0}{{{\color{numbercolor}0}}}1
+  %   {1}{{{\color{numbercolor}1}}}1
+  %   {2}{{{\color{numbercolor}2}}}1
+  %   {3}{{{\color{numbercolor}3}}}1
+  %   {4}{{{\color{numbercolor}4}}}1
+  %   {5}{{{\color{numbercolor}5}}}1
+  %   {6}{{{\color{numbercolor}6}}}1
+  %   {7}{{{\color{numbercolor}7}}}1
+  %   {8}{{{\color{numbercolor}8}}}1
+  %   {9}{{{\color{numbercolor}9}}}1
+  literate=%
+    % {"}{{{\ProcessQuote{"}}}}1% Disable coloring within double quotes
+    % {'}{{{\ProcessQuote{'}}}}1% Disable coloring within single quote
+    *{0}{{\FormatDigit{0}}}{1}%
+    {1}{{\FormatDigit{1}}}{1}%
+    {2}{{\FormatDigit{2}}}{1}%
+    {3}{{\FormatDigit{3}}}{1}%
+    {4}{{\FormatDigit{4}}}{1}%
+    {5}{{\FormatDigit{5}}}{1}%
+    {6}{{\FormatDigit{6}}}{1}%
+    {7}{{\FormatDigit{7}}}{1}%
+    {8}{{\FormatDigit{8}}}{1}%
+    {9}{{\FormatDigit{9}}}{1}%
+    {.0}{{\FormatDigit{.0}}}{2}% Following is to ensure that only periods
+    {.1}{{\FormatDigit{.1}}}{2}% followed by a digit are changed.
+    {.2}{{\FormatDigit{.2}}}{2}%
+    {.3}{{\FormatDigit{.3}}}{2}%
+    {.4}{{\FormatDigit{.4}}}{2}%
+    {.5}{{\FormatDigit{.5}}}{2}%
+    {.6}{{\FormatDigit{.6}}}{2}%
+    {.7}{{\FormatDigit{.7}}}{2}%
+    {.8}{{\FormatDigit{.8}}}{2}%
+    {.9}{{\FormatDigit{.9}}}{2}%
+    %{,}{{\FormatDigit{,}}{1}% depends if you want the "," in color
+    {\ }{{ }}{1}% handle the space
+}
+
+
+% \newtcblisting{python}[1][]{
+%   listing only,
+%   breakable,
+%   colframe=gray,
+%   colback=gray!10,
+%   listing options={
+%     language=python,
+%     basicstyle=\footnotesize\ttfamily,
+%     breaklines=true,
+%     columns=fullflexible,
+%     morekeywords={with,as},
+%     texcl  % Comments are LaTeX
+%   },
+%   #1
+% }
+
+\newtcblisting{python}[1][]{
+  listing only,
+  % breakable,
+  % colframe=gray,
+  % colback=gray!10,
+  colback=normal text.bg!90!normal text.fg,
+  colframe=normal text.fg,
+  bottom=-1mm, top=-1mm,
+  left=2mm, right=2mm,
+  listing options={
+    language=python,
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true,
+    columns=fullflexible,
+    morekeywords={with,as,None,True,False,self},
+    texcl  % Comments are LaTeX
+  },
+  #1
+}
+
+% Example usage:
+% \begin{frame}[fragile]
+% \begin{python}[]
+% # A comment with \LaTeX: $x^2 = \pi$
+% g = 'hello'
+% for i in range(10):
+%     print(i)
+% \end{python}
+% \end{frame}
+
+% ======================================================================
+% End Code Styling
+% ======================================================================
+\input{macros}
+\graphicspath{{figures/}{animations/}}
+
+% ======================================================================
+% ======================================================================
+% Begin Slides
+% ======================================================================
+% ======================================================================
+
+\title{Variational principles \& efficient subspace emulation}
+\date{December 13, 2021}
+\author[shortname]{\textcolor{t10orange}{Jordan Melendez}\inst{1,}\,\inst{2}
+}
+\institute[shortinst]{
+  \inst{1} Root Insurance, Data Scientist \and
+  \inst{2} The Ohio State University
+  }
+\begin{document}
+
+\begin{frame}
+    \titlepage
+    \vspace{-2.1in}
+    \begin{columns}
+    \begin{column}{0.4\textwidth}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \includegraphics[width=0.6\textwidth]{root_logo_black.png} \\
+        \vspace{0.1in}
+        \includegraphics[width=\textwidth]{OSU_EPS_logo-eps-converted-to}
+    \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+
+\begin{center}
+There is \alert{code} to accompany these slides!
+
+\alert{\href{https://github.com/jordan-melendez/quantum-emulator-examples}{github.com/jordan-melendez/quantum-emulator-examples}}
+\end{center}
+
+\end{frame}
+
+\section{Background}
+
+\begin{frame}{Progress in heavy nuclei}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{itemize}
+\item Great progress has been made
+\item Growth in computing power and algorithms is pushing to heavier systems
+\item But statistics requires more than one prediction
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/nuclear_chart_progress_4.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Why we need emulators}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+Complexity:
+\begin{enumerate}
+\item \emoji{thinking-face} Forward UQ
+\item \emoji{cold-sweat} Inverse UQ
+\item \emoji{scream} Experimental Design
+\end{enumerate}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+    \item $r$-process, $0\nu\beta\beta$ simulations, \& optimizing FRIB experiments can each be compute intensive --- but important!
+    \item Emulator: An algorithm capable of accurately approximating the exact solution while requiring only a fraction of the computational resources
+\end{itemize}
+\end{column}
+
+\end{columns}
+ 
+\end{frame}
+
+
+\begin{frame}[t]{Relation to BAND}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\begin{myblock}[valign=center]{BAND}
+The goal of BAND is to translate novel statistical methods of UQ into
+software tools that address prominent current problems in nuclear physics.
+\end{myblock}
+\begin{itemize}
+\item Subspace emulation could play a key role in \alert{Tool A}.
+\item An emulator can feed into all subsequent tools
+\end{itemize}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{figure}
+\includegraphics[width=1.05\textwidth]{figures/band_flowchart.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\section{Emulators}
+
+
+\begin{frame}[plain, fragile, t]{Gaussian processes as emulators}
+
+\begin{columns}[t]
+\begin{column}{0.6\textwidth}
+\begin{python}[]
+import numpy as np
+from sklearn.gaussian_process \
+    import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels \
+    import RBF, ConstantKernel as C
+
+x_train = np.arange(0, 1.1, 0.2)
+x_valid = np.linspace(0, 1, 101)
+y_train = np.sin(2 * np.pi * x_train)
+y_valid = np.sin(2 * np.pi * x_valid)
+
+kernel = C(1) * RBF(length_scale=0.2)
+gp = GaussianProcessRegressor(kernel)
+gp.fit(x_train[:, None], y_train)
+y_pred, y_stdv = gp.predict(
+    x_valid[:, None], return_std=True)
+\end{python}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item Forward Problem: Train at ``kinematic'' points
+\item Inverse Problem: + train at parameter values
+\item Modern libraries make it easy
+\end{itemize}
+\vspace{-0.3cm}
+\begin{figure}
+\includegraphics[width=0.85\textwidth]{figures/gp_regression_example.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Gaussian processes: pros \& cons}
+
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\begin{myblock}[valign=center]{Pros}
+\setlength\leftmargini{0pt}
+\begin{itemize}
+\item Non-intrusive (can leave legacy code untouched)
+\item Easy to use
+\item Flexible (non-parametric)
+\item Error bands for free
+\item $\cdots$
+\end{itemize}
+\end{myblock}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{myblock}[valign=center]{Cons}
+\setlength\leftmargini{0pt}
+\begin{itemize}
+\item Not great at extrapolating
+\item Choosing a kernel --- not always straightforward
+\item Numerical instabilities can arise
+\item Parameter space can be large!
+\item Does not necessarily take advantage of structure of the system (more on this later...)
+\end{itemize}
+\end{myblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[t]{Example: GPs for the Schr\"odinger equation}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\vspace{-0.5cm}%
+\begin{align*}
+    V(\lecs) = V_{h.o.}(\omega) + \sum \lec_i \exp[-(r/b_i)^2]
+\end{align*}
+for fixed $\{b_i\} = \{0.5, 2, 4\}$.
+\vspace{-0.1cm}
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/wave_functions_efficient_basis.png}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+Fit separate GP to $E$ and radius $R=\E[r]$.
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{figures/perturbed_oscillator_ground_state_energy_residuals_gp_only.png}
+\includegraphics[width=0.9\textwidth]{figures/perturbed_oscillator_ground_state_radius_residuals_gp_only.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Ritz subspace method: the basics}
+Instead of solving the Schr\"odinger eq.\ (an eigenvalue problem for bound states)
+\begin{align*}
+    H(\lecs) \ket*{\psi(\lecs)} & = E(\lecs) \ket*{\psi(\lecs)}
+\end{align*}
+write down a \alert{trial wave function} as a linear combination
+\begin{align*}
+    \ket*{\subspace{\psi}} = \sum_i \beta_i \ket*{\psi_i}
+\end{align*}
+and use a \alert{variational method} to determine the best $\beta_i$:
+
+\begin{myblock}[valign=center]{Bound state variational method}
+Minimize $\mel*{\subspace{\psi}}{H(\lecs)}{\subspace{\psi}}$ such that $\braket*{\subspace{\psi}}{\subspace{\psi}} = 1$.
+\end{myblock}
+
+The problem has then been reduced from determining an infinite-dimensional (or, at least large) $\ket*{\psi(\lecs)}$ to determining a couple coefficients $\beta_i$.
+\end{frame}
+
+
+
+\begin{frame}[plain, fragile, t]{Ritz subspace method for eigenvalue problems (\alert{\href{https://arxiv.org/abs/2104.04441}{arXiv:2104.04441}})}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+
+\alert{Problem:} $H(\lecs)$ is $N \times N$ and $N \gg 1$
+\vspace{-0.1cm}%
+\begin{align}
+  H(\lecs) \ket*{\psi(\lecs)} & = E(\lecs) \ket*{\psi(\lecs)} \tag{17} \\
+  \text{such that}~~~H(\lecs) & = H_0 + \sum \lec_j H_j \notag
+\end{align}
+\vspace{-0.1cm}%
+\alert{Solution:} Choose a basis with $N_b \ll N$:
+\begin{align}
+    X & \equiv
+    \begin{pmatrix}
+        \kern.2em\vline\kern.2em & \kern.2em\vline\kern.2em &  & \kern.2em\vline\kern.2em \\
+        \ket*{\psi_1} & \ket*{\psi_2} &  \cdots & \ket*{\psi_{N_{b}}} \\
+        \kern.2em\vline\kern.2em & \kern.2em\vline\kern.2em & & \kern.2em\vline\kern.2em
+    \end{pmatrix} \tag{18} \\
+   \subspace{H}(\lecs) & = X^\dagger H(\lecs) X, ~~~~~~ \normmat = X^\dagger X \tag{19}
+\end{align}
+\vspace{-0.1cm}%
+Finally, solve smaller problem:
+\begin{align} 
+  \subspace{H}(\lecs) \beta(\lecs) = \subspace{E}(\lecs) \normmat \beta(\lecs) \tag{20}
+\end{align}
+\end{column}
+\begin{column}{0.58\textwidth}
+\begin{python}[]
+def setup_projections(self, X):
+    # Project matrices once
+    H-*0*-_sub = X.T @ self.H-*0*- @ X # const.
+    H-*1*-_sub = X.T @ self.H-*1*- @ X # linear
+    # Store for later
+    self.X = X; self.N = X.T @ X
+    self.H-*0*-_sub = H-*0*-_sub
+    self.H-*1*-_sub = H-*1*-_sub
+    return self
+
+def solve_subspace(self, a):
+    H = self.H-*0*-_sub + self.H-*1*-_sub @ a
+    from scipy.linalg import eigh
+    E, beta = eigh(H, self.N)
+    return E[0], beta[:, 0] # g.s.
+\end{python}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[plain, fragile, t]{Ritz subspace method for eigenvalue problems (\alert{\href{https://arxiv.org/abs/2104.04441}{arXiv:2104.04441}})}
+
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+
+What is gained?
+\begin{align}
+  H(\lecs) \ket*{\psi(\lecs)} & = E(\lecs) \ket*{\psi(\lecs)} \tag{17} \\
+  \text{v.s.} & \notag\\
+  \subspace{H}(\lecs) \beta(\lecs) & = \subspace{E}(\lecs) \normmat \beta(\lecs) \tag{20}
+\end{align}
+Eq.~(20) is much smaller, and
+\begin{align}
+    E(\lecs) & \approx \subspace{E}(\lecs) & \ket*{\psi(\lecs)} & \approx X\beta(\lecs) \notag
+\end{align}
+\alert{Emulator} for both $E(\lecs)$ \alert{and} $\ket*{\psi(\lecs)}$! Thus:
+\begin{align}
+ \ev*{\hat O(\lecs)} & = \!\mel*{\psi(\lecs)}{\hat O(\lecs)}{\psi(\lecs)} \notag \\
+ & \approx \beta(\lecs)^\dagger [X^\dagger \hat O(\lecs) X ] \beta(\lecs) \tag{21}
+\end{align}
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{python}[]
+def solve_subspace(self, a):
+    H = self.H-*0*-_sub + self.H-*1*-_sub @ a
+    from scipy.linalg import eigh
+    E, beta = eigh(H, self.N)
+    # Get ground states:
+    return E[0], beta[:, 0]
+
+def predict(self, a):
+    E, beta = self.solve_subspace(a)
+    psi = self.X @ beta
+    return E, psi
+
+def expectation_value(self, a):
+    op = self.op-*0*-_sub + self.op-*1*-_sub @ a
+    E, beta = self.solve_subspace(a)
+    return beta.T @ op @ beta
+\end{python}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Subspace methods: pros \& cons}
+
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\begin{myblock}[valign=center]{Pros}
+\setlength\leftmargini{0pt}
+\begin{itemize}
+\item Can radically reduce the size of the eigenvector problem
+\item If the basis is well chosen, one can get very accurate results
+\item Can emulate both the energy and the wave function
+\item Gets emulator for downstream observables $\ev*{\hat O(\lecs)}$ for free
+\end{itemize}
+\end{myblock}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{myblock}[valign=center]{Cons}
+\setlength\leftmargini{0pt}
+\begin{itemize}
+\item Intrusive (Requires writing \alert{new} solver code, but it fits in these slides!)
+\item Not clear how to choose the basis $\{\ket*{\psi_i}\}$. (\alert{Will fix right now.})
+\item No free uncertainty quantification
+\item Emulating excited states will require enlarging basis
+\end{itemize}
+\end{myblock}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{A comparison: GPs vs Ritz (NCSM) subspace emulators}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+Use 6 lowest oscillator states as basis.
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ncsm.png}
+\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ground_state_wave_function_residuals_no_ec.png}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+Fit a separate GP to $E$ and the radius $R$.
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ground_state_energy_residuals_no_ec.png}
+\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ground_state_radius_residuals_no_ec.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\section{Efficient Subspace Emulators\\
+aka Eigenvector Continuation\\
+aka Reduced Basis Method
+}
+
+
+\begin{frame}[t]{Efficient subspace emulators for bound states: the basics}
+% \vspace{-1cm}%
+% Remember: Write down a \alert{trial wave function} as a linear combination
+% \begin{align*}
+%     \text{Remember, write down a \alert{trial wave function}:}~~~~\ket*{\subspace{\psi}} = \sum \beta_i \ket*{\psi_i}
+% \end{align*}
+Remember, write down a \alert{trial wave function}: $\ket*{\subspace{\psi}} = \sum \beta_i \ket*{\psi_i}$
+
+\begin{myblock}[valign=center]{Bound state variational method}
+Minimize $\mel*{\subspace{\psi}}{H(\lecs)}{\subspace{\psi}}$ such that $\braket*{\subspace{\psi}}{\subspace{\psi}} = 1$.
+\end{myblock}%
+\vspace{-0.2cm}%
+But how to choose the basis $\{ \ket*{\psi_i} \}$? For parameter-dependent problems:
+
+\begin{myblock}[valign=center]{Efficient Subspace Emulation}
+The insight: Use exact solutions $\ket*{\psi(\lecs_i)}$ at a set of training parameters $\{\lecs_i\}$ as the basis for the variational calculation.
+\tcblower
+The intuition: As the $\lecs$ are varied, the eigenvectors only trace a small subspace compared to the full Hilbert space. Using exact solutions thus automatically finds an \alert{incredibly} effective basis for subsequent emulation.
+\end{myblock}
+
+\end{frame}
+
+
+\begin{frame}[plain, fragile, t]{Efficient subspace emulators for bound states: the code}
+
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\vspace{-0.5cm}%
+\begin{align*}
+    V(\lecs) = V_{h.o.}(\omega) + \sum \lec_i \exp[-(r/b_i)^2]
+\end{align*}
+for fixed $\{b_i\} = \{0.5, 2, 4\}$.
+\vspace{-0.1cm}
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/wave_functions_efficient_basis.png}
+\end{figure}
+\end{column}
+\begin{column}{0.57\textwidth}
+\begin{python}[]
+import numpy as np
+
+def fit(self, a_train):
+    # Create subspace from exact $\ket{\psi(\lecs)}$
+    X = []
+    for a in a_train:
+        E, psi = self.solve_exact(a)
+        X.append(psi)
+    # Stack them as columns
+    X = np.stack(X, axis=1)
+
+    # The same function as before:
+    self.setup_projections(X)
+    # Store the training points
+    self.a_train = a_train
+    return self
+\end{python}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[t]{Another comparison: GPs vs NCSM vs efficient emulators}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\onslide<1>{Inefficient! Most training wave functions do not look like the emulated states\\}
+\only<1>{\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ncsm.png}}
+\only<2>{\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ground_state_energy_residuals.png}}
+
+\end{column}
+\begin{column}{0.5\textwidth}
+\onslide<1>{Much smaller basis span, but much more efficient!\\}
+\only<1>{\includegraphics[width=\textwidth]{figures/perturbed_oscillator_efficient.png}}
+\only<2>{\includegraphics[width=\textwidth]{figures/perturbed_oscillator_ground_state_radius_residuals.png}}
+\end{column}
+\end{columns}
+
+\only<2>{Comparing GP, NCSM, and the efficient emulators: the efficient emulator wins!}
+\begin{center}\vspace{-1cm}
+\only<1>{\includegraphics[width=0.5\textwidth]{figures/perturbed_oscillator_ground_state_wave_function_residuals.png}}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{Bound state emulators in the wild (\alert{K\"onig \emph{et al.} \href{https://arxiv.org/abs/1909.08446}{arXiv:1909.08446}})}
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/konig_interpolation_energy.png}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\includegraphics[width=\textwidth]{figures/konig_extrapolation_energy.png}
+\end{figure}
+\end{column}
+\end{columns}
+Eigenvector continuation (the efficient subspace emulator) beats both polynomials and GPs on interpolation and extrapolation in parameter space.
+
+Observable: $^{4}$He g.s.\ energy. Uses 12 training points with 3 parameters.
+\end{frame}
+
+
+\begin{frame}{Bound state emulators in the wild: inverse problem (\alert{\href{https://arxiv.org/abs/2104.04441}{arXiv:2104.04441}})}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\only<1>{\includegraphics[width=0.8\textwidth]{figures/nn_training_pts_with_stdv_titles.png}}
+\end{figure}
+\only<1>{Sampling 15 different parameters (some not shown). 50 training points.}
+\only<2>{Able to rapidly perform sampling on laptop in minutes, rather than on supercomputer for hours}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\only<1>{\includegraphics[width=0.8\textwidth]{figures/validation_residuals.png}}
+\only<2>{\includegraphics[width=0.9\textwidth]{figures/posterior_samples_cd_ce_clean.png}}
+\end{figure}
+\only<1>{Negligible residuals on validation data}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Bound state emulators in the wild: uncertainties (\alert{Sarkar, Lee: \href{https://arxiv.org/abs/2107.13449}{arXiv:2107.13449}})}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+Uncertainty in the emulator:
+\begin{align*}
+\textup{Error}[\ket*{\subspace{\psi}}] \propto \left[\frac{\mel*{\subspace{\psi}}{[H - \subspace{E}]^2}{\subspace{\psi}}}{\mel*{\subspace{\psi}}{H^2}{\subspace{\psi}}}\right]^{1/2}
+\end{align*}
+If $H$ is linear in $\lecs$, this can be computed in the small space.
+
+\vspace{0.2cm}
+Can obtain proportionality constant if needed
+
+\vspace{0.2cm}
+$\textup{Error}[E] \sim \textup{Error}[\ket*{\subspace{\psi}}]^2$
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\vspace{-0.4cm}
+\includegraphics[width=0.9\textwidth]{figures/bound_state_error_emulator.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\section{Beyond Bound States}
+
+\begin{frame}[t]{Efficient trial scattering wave functions: the basics (\alert{\href{https://arxiv.org/abs/2007.03635}{arXiv:2007.03635}})}
+Again, write down a \alert{trial wave function}: $\ket*{\subspace{\psi}} = \sum \beta_i \ket*{\psi_i}$.
+
+For scattering, it is convenient to work with the radial wave function $u_\ell(r)$ for partial wave $\ell$, which in asymptotic form is
+\begin{align*}
+    u_\ell(r) \xrightarrow[r\to\infty]{} \sin(pr - \frac{1}{2}\ell\pi) + K_\ell \cos(pr - \frac{1}{2}\ell\pi)
+\end{align*}
+
+\begin{myblock}[valign=center]{Kohn variational principle (KVP)}
+Minimize $\mathcal{K}_{KVP}[\subspace{\psi}_\ell] = K_\ell - \mel*{\subspace{\psi}_\ell}{H(\lecs) - E}{\subspace{\psi}_\ell}$ such that $\braket*{\subspace{\psi}_\ell}{\subspace{\psi}_\ell} = 1$.
+\end{myblock}%
+
+Again, use exact $u_\ell(r)$ at training points $\{\lecs_i\}$ as the basis.
+
+It is a linear problem, can solve for $\beta$ analytically and quickly.
+\end{frame}
+
+\begin{frame}{Trial scattering wave functions in the wild (\alert{\href{https://arxiv.org/abs/2007.03635}{arXiv:2007.03635}})}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\only<2>{Can accurately emulate with \alert{Coulomb}}
+\only<3>{Also works with \alert{optical} potentials}
+\end{column}
+\begin{column}{0.5\textwidth}
+
+\begin{figure}
+\only<2>{\includegraphics[width=\textwidth]{figures/furnstahl_p_alpha_residuals.png}}
+\only<3>{\includegraphics[width=\textwidth]{figures/furnstahl_optical_residuals.png}}
+\end{figure}
+\end{column}
+\end{columns}
+\only<1>{Can emulate entire scattering wave function and its phase shifts}
+\only<1>{%
+\begin{figure}%
+\includegraphics[width=0.9\textwidth]{figures/emulated_scattering_wave_functions.png}%
+\end{figure}%
+}
+\end{frame}
+
+
+\begin{frame}{Efficient trial $K$ or $T$ matrices (\alert{\href{https://arxiv.org/abs/2106.15608}{arXiv:2106.15608}})}
+
+Rather than solve the Schr{\"o}dinger equation, use the Lippmann--Schwinger (LS) equation
+\begin{align*}
+    K = V + V G_0 K
+\end{align*}
+Propose \alert{trial $K$ matrix}
+\begin{align*}
+    \subspace{K} = \sum \beta_i K_i
+\end{align*}
+
+\begin{myblock}[valign=center]{Newton variational principle (NVP)}
+Minimize $\mathcal{K}_{NVP}[\subspace{K}] = V + V G_0 \subspace{K} + \subspace{K} G_0 V - \subspace{K} G_0 \subspace{K} + \subspace{K} G_0 V G_0 \subspace{K}$ ~~(no constraints!)
+\end{myblock}%
+
+As usual, take the \alert{matrix basis} $\{K_i\}$ from exact solutions of the LS equation.
+
+It is a linear problem, can solve for $\beta$ analytically and quickly.
+
+\end{frame}
+
+\begin{frame}{Trial $K$ matrices in the wild (\alert{\href{https://arxiv.org/abs/2106.15608}{arXiv:2106.15608}})}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\only<1>{\includegraphics[width=\textwidth]{figures/minnesota_1S0_phases_with_residuals.png}}
+\only<2>{Can accurately \& efficiently emulate \alert{gradients} with respect to parameters}
+\only<3>{Can easily handle the \alert{Coulomb} interaction}
+\only<5>{%
+\begin{align*}%
+    \sigma_{\text{tot}}(q) = - \frac{\pi}{2q^2} \sum_{j=0}^{j_{\text{max}}} (2j+1) \Re{ \Tr [S_j(q)-\mathds{1}] }%
+\end{align*}%
+Multiple emulators across partial waves can be combined to emulate scattering observables. Over \alert{300x} improvement in CPU time.%
+}
+\end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\only<1>{\includegraphics[width=\textwidth]{figures/minnesota_1S0_extrapolation_K.png}}
+\only<2>{\includegraphics[width=\textwidth]{figures/minnesota_1S0_K_grads_with_residuals.png}}
+\only<3>{\includegraphics[width=\textwidth]{figures/coulomb_p_alpha_1S0_phases_and_residuals.png}}
+\only<5>{\includegraphics[width=\textwidth]{figures/np_total_cross_section_with_errors.png}}
+\end{figure}
+\end{column}
+\end{columns}
+\only<1>{Can \alert{extrapolate} very far from support of data, even across singularities}
+\only<4>{Coupled channels get major speedups with emulation}
+\only<4>{\includegraphics[width=\textwidth]{figures/np_3S1_3D1_coupled_K_matrix_with_residual.png}}
+\end{frame}
+
+\begin{frame}{Trial $K$ matrices in the wild: uncertainties (In progress)}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\begin{itemize}
+\item By following reduced basis approach, UQ for $\subspace{K}$ is possible
+\item Determined up to proportionality constant
+\item Can help propose next training point
+\item Can be added to error budget if using emulator in the wild
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\vspace{-0.4cm}
+\includegraphics[width=\textwidth]{figures/tan_delta_UQ_minnesota.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Density functional theory?! (In progress)}
+% \begin{columns}
+% \begin{column}{0.5\textwidth}
+
+% \end{column}
+
+% \begin{column}{0.5\textwidth}
+% \begin{figure}
+
+% \end{figure}
+% \end{column}
+% \end{columns}
+
+\only<1>{
+Two reasonable approaches
+\begin{enumerate}
+\item The Kohn-Sham formalism requires self-consistently solving Schr{\"o}dinger equations for orbitals. One could emulate this step.
+\item The ground state energy is minimized as a functional of the density. Just write down a trial density and turn the crank.
+\end{enumerate}
+I took the latter approach
+\begin{align*}
+\subspace{\rho} = \sum \beta_i \rho_i
+\end{align*}
+and minimized
+\begin{align*}
+E[\subspace{\rho}] = g\sum \epsilon - a \int \dd[3]{x} [\subspace{\rho}(x)]^2 - b \int \dd[3]{x} [\subspace{\rho}(x)]^{7/3} - c \int \dd[3]{x} [\subspace{\rho}(x)]^{8/3}
+\end{align*}
+Non-linear means there is no ``nice'' solution for $\beta$. Use an optimizer.
+}
+
+\only<2>{
+\begin{figure}
+\includegraphics[width=0.45\textwidth]{figures/dft_nlo_example.png}
+\end{figure}
+}
+
+% \begin{columns}
+% \begin{column}{0.5\textwidth}
+
+% \end{column}
+% \begin{column}{0.5\textwidth}
+
+% \end{column}
+% \end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Emulators for generic differential equations}
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+\begin{enumerate}
+\item Derive the \alert{\href{https://en.wikipedia.org/wiki/Galerkin_method}{Galerkin weak formulation}} of the PDE
+\item Apply the \alert{\href{https://doi.org/10.1137/151004550}{reduced basis method}}
+\end{enumerate}
+Example [Gaussian $\rho(\lecs)$ for variable $\lecs$]:
+\begin{itemize}
+\item Poisson equation
+\begin{align*}
+\grad^2 \phi = -\rho
+\end{align*}
+\item Weak form:
+\begin{align*}
+\int_{\Omega} \grad\phi\grad\psi \textup{d}x = -\int_{\Omega}\rho \psi \textup{d}x
+\end{align*}
+\end{itemize}
+\end{column}
+\begin{column}{0.5\textwidth}
+\begin{figure}
+\vspace{-0.4cm}
+\includegraphics[width=\textwidth]{figures/galerkin_poisson_potential.png}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+% \begin{frame}{Uncertainty quantification for subspace emulators (\alert{\href{http://rave.ohiolink.edu/etdc/view?acc_num=osu1587114253866152}{My thesis}})}
+
+% \begin{columns}[t]
+% \begin{column}{0.5\textwidth}
+% \begin{itemize}
+% \item But wait! What about emulator uncertainty?
+% \item Not much published to date (that I know of)
+% \item I made a proposal in my thesis
+% \begin{align*}
+%     \ket*{\psi(\lecs)} & = \ket*{\subspace{\psi}(\lecs)} + \ket*{\epsilon(\lecs)} \\
+%     \ket*{\epsilon(\lecs)} & \sim \mathcal{GP}[0, W \kappa(\lecs, \lecs'; \boldsymbol{\theta})]
+% \end{align*}
+% \item Train with leave-$k$-out CV only on basis wave functions
+% \item Uncertainties on downstream observables are pure predictions
+% \end{itemize}
+% \end{column}
+% \begin{column}{0.5\textwidth}
+% \begin{figure}
+% \includegraphics[width=\textwidth]{figures/residuals_and_errors_triton_halflife.png}
+% % \includegraphics[width=\textwidth]{figures/residuals_and_errors_He4_rt_r2.png}
+% \end{figure}
+% \end{column}
+% \end{columns}
+% \end{frame}
+
+
+\section{Concluding Remarks}
+
+\begin{frame}{Conclusions}
+
+\begin{columns}[t]
+\begin{column}{0.4\textwidth}
+\begin{myblock}[valign=center]{BAND}
+The goal of BAND is to translate novel statistical methods of UQ into
+software tools that address prominent current problems in nuclear physics.
+\end{myblock}
+Subspace emulation could play a key role in this effort
+\end{column}
+\begin{column}{0.6\textwidth}
+\begin{myblock}[valign=center]{Benefits}
+\setlength\leftmargini{0pt}
+\begin{itemize}
+\item Can radically reduce the size of the problem (not just \alert{eigenvectors}!)
+\item An extremely effective basis can be chosen \alert{automatically}
+\item Gets emulator for downstream observables $\ev*{\hat O(\lecs)}$ \alert{for free}
+\end{itemize}
+\end{myblock}
+\begin{itemize}
+\item Promising directions: heavy systems, beyond eigenvalues, DFT, PDEs, etc.
+\item Error bands are in the works!
+\end{itemize}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+
+\appendix
+
+\begin{frame}[standout,t]
+
+\vspace{.2in}
+
+Thank you!
+\noindent\rule{\textwidth}{1pt}
+
+% The BUQEYE collaboration
+% \begin{center}
+% % \href{https://arxiv.org/abs/1808.08211}{\alert{arXiv:1808.08211}}
+% \href{https://arxiv.org/abs/1904.10581}{\alert{arXiv:1904.10581}}
+% \hspace{.3in}
+% \href{https://arxiv.org/abs/1704.03308}{\alert{arXiv:1704.03308}}
+% \\
+% \href{https://buqeye.github.io/}{\alert{buqeye.github.io}}
+% \hspace{.3in}
+% \href{https://buqeye.github.io/gsum/}{\alert{buqeye.github.io/gsum}}
+% \end{center}
+
+\begin{columns}
+\begin{column}{0.5\textwidth}
+\begin{center}
+\href{https://buqeye.github.io/}{\alert{buqeye.github.io}}
+\end{center}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}
