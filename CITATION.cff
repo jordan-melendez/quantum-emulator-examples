@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: Quantum Emulator Examples
+message: 'If you use this software, please cite it as below.'
+type: software
+authors:
+  - given-names: Jordan
+    family-names: Melendez
+    email: melendez.27@osu.edu
+    affiliation: The Ohio State University
+    orcid: 'https://orcid.org/0000-0003-1359-1594'
+date-released: 2021-07-12
