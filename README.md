@@ -1,5 +1,7 @@
 # quantum-emulator-examples
 
+[![DOI](https://zenodo.org/badge/384679629.svg)](https://zenodo.org/badge/latestdoi/384679629)
+
 This repository has an example of bound state calculations using subspace emulators
 (aka, eigenvector continuation or a reduced basis method).
 
